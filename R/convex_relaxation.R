@@ -151,7 +151,7 @@ perm.proj <- function(D, rep = 100, S, L, mu, P_old, maj.rule = TRUE)
       ind = match(rnk_Dx, rnk_x)
       P[cbind(c(1 : p), ind)] = 1
       obj.store[i] = subobj.function(P, S, L, mu)
-      if  ((obj.store[i] < old.obj))
+      if  ((obj.store[i] < min))
       {
         min = obj.store[i]
         P.new = P
@@ -159,7 +159,7 @@ perm.proj <- function(D, rep = 100, S, L, mu, P_old, maj.rule = TRUE)
       i = i + 1
     }
   }
-  return(P = P)
+  return(P = P.new)
 }
 
 primal.obj <- function (P, P_0)
@@ -172,7 +172,8 @@ dual.obj <- function(x, y, Z, P_0)
 {
   n = length(x)
   one.vec = matrix(1, nrow = n)
-  obj = -1 / 2 * sum((tcrossprod(x, one.vec) + tcrossprod(one.vec, y) - Z)^2) - sum(diag(crossprod(Z, P_0))) + crossprod(x, (P_0 %*% one.vec - one.vec)) + crossprod(y, (crossprod(P_0, one.vec) - one.vec))
+  obj = -1 / 2 * sum((tcrossprod(x, one.vec) + tcrossprod(one.vec, y) - Z)^2) -
+    sum(diag(crossprod(Z, P_0))) + crossprod(x, (P_0 %*% one.vec - one.vec)) + crossprod(y, (crossprod(P_0, one.vec) - one.vec))
   return(obj)
 }
 
