@@ -4,7 +4,7 @@ Version: 0.1
 Author: Aramayis Dallakyan
 Maintainer: Aramayis Dallakyan <dallakyan1988@tamu.edu>
 Description: Learning Bayesian Networks through Birkhoff Polytope
-Imports: varband
+Imports: varband,
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

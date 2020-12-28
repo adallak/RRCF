@@ -1,8 +1,8 @@
-source("relaxed_chol.R")
-require(Matrix)
-require(varband)
-require(ppcor)
-require(graph)
+#source("relaxed_chol.R")
+#require(Matrix)
+#require(varband)
+#require(ppcor)
+#require(graph)
 ######################################3
 ## calculate the correlations on off diagonals
 cov.cor<-function(V){

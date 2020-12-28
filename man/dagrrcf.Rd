@@ -4,9 +4,10 @@
 \alias{dagrrcf}
 \title{This is the main function. Implements the two step RRCF algorithm.}
 \usage{
-dagrrcf(X, mu = 0.03, alpha = 1.5, s = 0.01, lambda = 0,
-  gamma = 2, n.iter = 100, n.iter.proj = 100, eps = 1e-04,
-  P.init = NULL, penalty = c("lasso", "MCP"))
+dagrrcf(X, mu = 0.03, alpha = 1, s = 0.01, lambda = 0, gamma = 2,
+  n.iter = 100, n.iter.proj = 100, eps = 1e-04,
+  penalty = c("lasso", "MCP"), maj.rule = FALSE, perm.rep = 100,
+  refine = FALSE, ref.alpha = 0.001, BH = TRUE)
 }
 \arguments{
 \item{X}{- n x p data matrix}
@@ -27,9 +28,9 @@ dagrrcf(X, mu = 0.03, alpha = 1.5, s = 0.01, lambda = 0,
 
 \item{eps}{- tolerance}
 
-\item{P.init}{- initial permutation matrix}
-
 \item{penalty}{- penalty type: MCP or lasso}
+
+\item{P.init}{- initial permutation matrix}
 }
 \value{
 permutation matrix P, Cholesky factor L
