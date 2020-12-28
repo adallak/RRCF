@@ -384,6 +384,23 @@ subgrad.obj <- function(P, S, L, lambda)
 #   return(alpha)
 # }
 
+#' This is the main function. Implements the two step RRCF algorithm.
+#'
+#' @param X - n x p data matrix
+#' @param mu - learning rate for the projected gradient algorith
+#' @param alpha - used in project gradient algorithm
+#' @param s     - learning rate in gradient step
+#' @param lambda - penalty hyper-parameter
+#' @param gamma  - penalty hyper-parameter. Active when penalty = MCP
+#' @param n.iter - global number of itereation
+#' @param n.iter.proj - local number of iteration
+#' @param eps    - tolerance
+#' @param P.init - initial permutation matrix
+#' @param penalty - penalty type: MCP or lasso
+#'
+#' @return permutation matrix P, Cholesky factor L
+#' @export
+#'
 dagrrcf <- function(X, mu = 0.03 , alpha = 1, s = 0.01, lambda = 0, gamma = 2, n.iter = 100, n.iter.proj = 100,
                    eps = 1e-4, penalty = c("lasso", "MCP"), maj.rule = FALSE, perm.rep = 100, refine = FALSE, ref.alpha = 0.001, BH = TRUE)
 {

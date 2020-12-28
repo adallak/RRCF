@@ -42,7 +42,7 @@ RC_i <- function(i, A, gamma, lambda, maxiter = 100, eps = 1e-4, initx = NULL, p
     iter = 1
     converged = FALSE
     if (is.null(initx))
-    { 
+    {
       x = matrix(0, nrow = i, ncol = 1)
       x[i] = sqrt(A[i,i])
     }else{
@@ -61,7 +61,7 @@ RC_i <- function(i, A, gamma, lambda, maxiter = 100, eps = 1e-4, initx = NULL, p
           {
             x[j] = soft((-2 * y_j), lambda) / (2 *  A_jj - 1/ gamma)
           }else{
-            x[j] = - y_j / A_jj  
+            x[j] = - y_j / A_jj
           }
         }else{
           x[j] = soft((-2 * y_j), lambda) / (2 *  A_jj)
@@ -82,6 +82,19 @@ RC_i <- function(i, A, gamma, lambda, maxiter = 100, eps = 1e-4, initx = NULL, p
   return(x)
 }
 
+#' Updates the Cholesky factor L, when the permutation matrix is given
+#'
+#' @param X - n x p data matrix
+#' @param P - permutation matrix
+#' @param gamma - Hyperparameter for penalt. Active when penalty is  MCP.
+#' @param lambda - Penalty function
+#' @param maxiter - Maimum number of iterations
+#' @param eps     - tolerance
+#' @param initL   - initial Cholesky Factor
+#' @param penalty - penaty type: MCP or lasso
+#'
+#' @return  - Cholesky Factor L
+#' @export
 relaxchol <- function(X, P, gamma, lambda, maxiter = 100, eps = 1e-4, initL = NULL, penalty = c("lasso", "MCP"))
 {
   n = dim(X)[1]
@@ -116,7 +129,7 @@ relaxchol_BIC <- function(X , gamma = 2, P , lamlist = NULL, nlam = 60, mu, flmi
 {
   n <- nrow(X)
   p <- ncol(X)
-  
+
   S <- crossprod(scale(X, center=TRUE, scale=FALSE)) / n
   initL = diag(diag(S))
   if (is.null(lamlist)) {
@@ -127,7 +140,7 @@ relaxchol_BIC <- function(X , gamma = 2, P , lamlist = NULL, nlam = 60, mu, flmi
     nlam <- length(lamlist)
   }
   theta <- expand.grid(lamlist, gamma)
-  
+
   bic.fit <- ebic.fit <- c()
   storage <- matrix(0, nrow = p, ncol = p)
   for (i in 1 : dim(theta)[1])
@@ -166,7 +179,7 @@ relaxchol_path <- function(X, P, gamma, maxiter = 100, eps = 1e-4, penalty = c("
   theta = expand.grid(lamlist, gamma)
   ntheta = dim(theta)[1]
   result<- array(NA, c(p, p, ntheta))
-  
+
   for (i in seq(ntheta)) {
     if(i==1){
       result[, , i] <- diag(1/sqrt(diag(S)))
@@ -185,10 +198,10 @@ lammax <- function(S){
   # such that the estimator L_{\lambda} is a diagonal matrix
   # NOTE: this is not necessarily true, but generally
   # a upper bound of the value we are looking for.
-  
+
   # Args:
   #     S: the p-by-p sample covariance matrix
-  
+
   p <- ncol(S)
   sighat <- rep(NA, p-1)
   for (r in seq(2, p)){
@@ -236,14 +249,14 @@ relaxchol_CV <- function(X , gamma, P , lamlist = NULL, nlam = 60, flmin = 1e-2,
     meanx <- colMeans(x_tr)
     x_tr <- scale(x_tr, center = meanx, scale = FALSE)
     S_tr <- crossprod(x_tr) / (dim(x_tr)[1])
-  
+
     path_fit <- relaxchol_path(X = x_tr, P = P, gamma = gamma, lamlist = lamlist, maxiter = maxiter , eps = eps, penalty = penalty)$path
-      
+
   # evaluate this on left-out fold:
   x_te <- X[folds[[i]], ]
   x_te <- scale(x_te, center = meanx, scale = FALSE)
   S_te <- crossprod(x_te) / (dim(x_te)[1])
-  
+
   for (j in seq(nlam)) {
     errs_fit[j, i] <- likelihood(crossprod(path_fit[, , j]), P %*% S_te %*% t(P))
   }
@@ -256,9 +269,9 @@ relaxchol_CV <- function(X , gamma, P , lamlist = NULL, nlam = 60, flmin = 1e-2,
 
   fit_cv <- relaxchol(X = X, P = P, lambda = theta[ibest_fit, 1], gamma = theta[ibest_fit, 2],
                   initL = path_fit[, , ibest_fit], maxiter = maxiter, eps = eps, penalty = penalty)
-  
-  
-  return(list(errs_fit = errs_fit, folds = folds, lamlist = lamlist, lambda = theta[ibest_fit, 1], gamma = theta[ibest_fit, 2], 
+
+
+  return(list(errs_fit = errs_fit, folds = folds, lamlist = lamlist, lambda = theta[ibest_fit, 1], gamma = theta[ibest_fit, 2],
             ibest_fit = ibest_fit, i1se_fit = i1se_fit, L_fit = fit_cv))
 }
 
@@ -304,9 +317,9 @@ likelihood <- function (Omega, S){
 # L_mcp = relaxchol_CV(X = x, gamma = 2, P = diag(1, nrow = 15), lamlist = NULL, nlam = 60,folds = NULL, nfolds = 5, maxiter = 100, penalty = "MCP", eps = 1e-4)
 
 # L_lasso = relaxchol_CV(X = x, gamma = 2, P = diag(1, nrow = 15), lamlist = NULL, nlam = 60,folds = NULL, nfolds = 5, maxiter = 100, penalty = "lasso", eps = 1e-4)
-# 
+#
 # matimage(true)
 # matimage(L_lasso$L_fit)
-#  
+#
 # relaxchol_path(X = x, P, gamma = 2, maxiter = 100, eps = 1e-4, penalty = "MCP",
 #                          lamlist = NULL, nlam = 60, flmin = 0.01)
