@@ -17,7 +17,7 @@ cov.cor<-function(V){
 #################################################
 ## Calculate penalty of MCP
 
-compareExtended <- function (gl, gt) 
+compareExtended <- function (gl, gt)
 {
   ml <- wgtMatrix(ugraph(gl))
   mt <- wgtMatrix(ugraph(gt))
@@ -29,18 +29,18 @@ compareExtended <- function (gl, gt)
   diffm <- ml - mt
   FP = sum(diffm > 0)/2
   nmbTrueGaps <- (sum(mt == 0) - p)/2
-  fpr <- if (nmbTrueGaps == 0) 
+  fpr <- if (nmbTrueGaps == 0)
     1
   else (sum(diffm > 0)/2)/nmbTrueGaps
   diffm2 <- mt - ml
   nmbTrueEdges <- (sum(mt == 1)/2)
-  TP = nmbTrueEdges - (sum(diffm2 > 0)/2) 
-  tpr <- if (nmbTrueEdges == 0) 
+  TP = nmbTrueEdges - (sum(diffm2 > 0)/2)
+  tpr <- if (nmbTrueEdges == 0)
     0
   else 1 - (sum(diffm2 > 0)/2)/nmbTrueEdges
   trueEstEdges <- (nmbTrueEdges - sum(diffm2 > 0)/2)
   tdr <- if (sum(ml == 1) == 0) {
-    if (trueEstEdges == 0) 
+    if (trueEstEdges == 0)
       1
     else 0
   }
@@ -49,7 +49,7 @@ compareExtended <- function (gl, gt)
 }
 
 #######################
-compareL <- function (L_est, L_true) 
+compareL <- function (L_est, L_true)
 {
   ml <- L_est
   mt <- L_true
@@ -59,17 +59,17 @@ compareL <- function (L_est, L_true)
   ml[ml != 0] <- rep(1, sum(ml != 0))
   diffm <- ml - mt
   nmbTrueGaps <- (sum(mt == 0) - (p * (p + 1) / 2))
-  fpr <- if (nmbTrueGaps == 0) 
+  fpr <- if (nmbTrueGaps == 0)
     1
   else (sum(diffm > 0)) / nmbTrueGaps
   diffm2 <- mt - ml
   nmbTrueEdges <- (sum(mt == 1))
-  tpr <- if (nmbTrueEdges == 0) 
+  tpr <- if (nmbTrueEdges == 0)
     0
   else 1 - (sum(diffm2 > 0))/nmbTrueEdges
   trueEstEdges <- (nmbTrueEdges - sum(diffm2 > 0))
   tdr <- if (sum(ml == 1) == 0) {
-    if (trueEstEdges == 0) 
+    if (trueEstEdges == 0)
       1
     else 0
   }
@@ -81,7 +81,7 @@ compareL <- function (L_est, L_true)
 ###### Function to preject on doubly stochastic matrices
 
 
-grad.proj<- function(L, P.init = NULL, S,  n.iter = 1000, alpha = 1, s = 0.01, eps = 1e-4,mu = 0.03) 
+grad.proj<- function(L, P.init = NULL, S,  n.iter = 1000, alpha = 1, s = 0.01, eps = 1e-4,mu = 0.03)
 {
   p = dim(S)[1]
   if (is.null(P.init))
@@ -91,13 +91,13 @@ grad.proj<- function(L, P.init = NULL, S,  n.iter = 1000, alpha = 1, s = 0.01, e
     P_proj <- diag(p)[P.init,]
   }
   ## initial values for dual variables
-  x = y = matrix(1, nrow = p)  
+  x = y = matrix(1, nrow = p)
   Z = matrix(1, nrow = p, ncol = p)
   iter = 1
   converged = FALSE
   err = c()
-  
-  while ( (converged == FALSE) && (iter <= n.iter) ) 
+
+  while ( (converged == FALSE) && (iter <= n.iter) )
   {
     P_old = P_proj
     L_old = L
@@ -139,7 +139,7 @@ sgrad.proj <- function(S, L, p.lambda, s= 0.3, alpha = 1, pmax_iter = 100, eps =
   {
     P = diag(p)[P.init,]
   }
-  x = y = matrix(1, nrow = p)  
+  x = y = matrix(1, nrow = p)
   Z = matrix(1, nrow = p, ncol = p)
   iter = 1
   converge = FALSE
@@ -221,18 +221,18 @@ sa.proj <- function(D, rep = 100, S , L, mu, P)
 	{
 		P_old = P
 		old_obj = subobj.function(P_old, S, L, mu)
-		Temp = T_list[i] 
+		Temp = T_list[i]
     		x = runif(p)
     		rnk_x = rank(x, ties.method = "random")
     		rnk_Dx = rank(D %*% x, ties.method = "random")
-    		P = match(rnk_Dx, rnk_x)	
+    		P = match(rnk_Dx, rnk_x)
       		obj.store = subobj.function(P = P, S, L, mu)
 		alpha = min(1, exp(-1 / Temp * (obj.store - old_obj)))
 		change = rbinom(1, 1, alpha)
 		P = P * change + (1 - change) * P_old
 	}
 	return(P)
-}	
+}
 
 perm.proj <- function(D, rep = 100, S, L, mu, P_old, maj.rule = FALSE)
 {
@@ -244,7 +244,7 @@ perm.proj <- function(D, rep = 100, S, L, mu, P_old, maj.rule = FALSE)
   {
     store = matrix(0, rep, p)
     store[rep,] = p
-    while((i < rep)) 
+    while((i < rep))
   {
     x = runif(p)
     rnk_x = rank(x, ties.method = "random")
@@ -254,9 +254,9 @@ perm.proj <- function(D, rep = 100, S, L, mu, P_old, maj.rule = FALSE)
     i = i + 1
     }
     h_x = apply(store, 2, function(x) tabulate(x))
-    
+
     E_x = rep / p
-    s = 2^(- E_x/ h_x)  
+    s = 2^(- E_x/ h_x)
     temp = apply(s, 2, function(x) which.max(x))
 #    cat("Initial temp is", temp, "\n")
     k = 1 : p
@@ -275,23 +275,23 @@ perm.proj <- function(D, rep = 100, S, L, mu, P_old, maj.rule = FALSE)
       }else{
         temp[duplic_index] = i
       }
-    } 
+    }
     rm(store,not_included, duplic_index, dupl_score, h_x, s)
     gc()
     P = temp
   }else{
-    
-    old.obj = subobj.function(P_old, S, L, mu)
-    min = old.obj
+
+    #old.obj = subobj.function(P_old, S, L, mu)
+    min = 1e+8
     P = P_old
-    while((i < rep)) 
+    while((i < rep))
     {
       x = runif(p)
       rnk_x = rank(x, ties.method = "random")
       rnk_Dx = rank(D %*% x, ties.method = "random")
       ind = match(rnk_Dx, rnk_x)
       obj.store = subobj.function(P = ind, S, L, mu)
-      if  ((obj.store < min)) 
+      if  ((obj.store < min))
       {
         min = obj.store
         P = ind
@@ -312,7 +312,7 @@ dual.obj <- function(x, y, Z, P_0)
 {
   n = length(x)
   one.vec = matrix(1, nrow = n)
-  obj = -1 / 2 * sum((tcrossprod(x, one.vec) + tcrossprod(one.vec, y) - Z)^2) - sum(diag(crossprod(Z, P_0))) + 
+  obj = -1 / 2 * sum((tcrossprod(x, one.vec) + tcrossprod(one.vec, y) - Z)^2) - sum(diag(crossprod(Z, P_0))) +
     crossprod(x, (P_0 %*% one.vec - one.vec)) + crossprod(y, (crossprod(P_0, one.vec) - one.vec))
   return(obj)
 }
@@ -326,7 +326,7 @@ obj.function <- function(P, S, L, mu, gamma = 2, lambda = 0, penalty = c("lasso"
   {
     obj <- 1 / 2 * sum(diag(S[P,P] %*% crossprod(L))) - sum(log(diag(L)))  + lambda * sum(abs(L - diag(diag(L))))  # - mu / 2 * sum((Pii %*% P)^2)
      }else{
-    row_sum = 0   
+    row_sum = 0
     for ( i in 2:p)
     {
       index = 1 : i
@@ -336,23 +336,23 @@ obj.function <- function(P, S, L, mu, gamma = 2, lambda = 0, penalty = c("lasso"
 
     }
   return(obj)
-} 
+}
 
 subobj.function <- function(P, S, L, mu)
 {
   p <- dim(S)[1]
   one.vec <- matrix(1, p)
   Pii <-  diag(1, p)  - 1/p * tcrossprod(one.vec, one.vec)
-  obj <- 1 / 2 * sum(diag(S[P,P] %*% crossprod(L)))#  - mu / 2 * sum((Pii %*% P)^2)   
+  obj <- 1 / 2 * sum(diag(S[P,P] %*% crossprod(L)))#  - mu / 2 * sum((Pii %*% P)^2)
   return(obj)
-} 
+}
 
 gradient <- function(S, P, L, mu)
 {
   p <- dim(S)[1]
   one.vec <- matrix(1,nrow = p, ncol = 1)
 #  P.mat = as(as.integer(P),"pMatrix")
-  P = diag(p)[P,]
+#  P = diag(p)[P,]
   Pii <-  diag(1, p) - 1 / p * tcrossprod(one.vec, one.vec)
   grad_f = crossprod(L) %*% P%*% S - mu * Pii %*% P
   return(grad_f)
@@ -362,12 +362,12 @@ subgradient <- function(S, P , Omega, lambda)
 {
   subgrad = sign(P)
  # subgrad[subgrad == 0] = runif(length(subgrad[subgrad == 0]), -1, 1)
-  return(Omega %*% P %*% S + lambda * subgrad) 
+  return(Omega %*% P %*% S + lambda * subgrad)
 }
 
 subgrad.obj <- function(P, S, L, lambda)
 {
-  obj <- 1 / 2 * sum(diag(P %*% S %*% t(P) %*% crossprod(L))) + lambda * sum(abs(P))  #  - mu / 2 * sum((Pii %*% P)^2)   
+  obj <- 1 / 2 * sum(diag(P %*% S %*% t(P) %*% crossprod(L))) + lambda * sum(abs(P))  #  - mu / 2 * sum((Pii %*% P)^2)
   return(obj)
 }
 # Armijo_rule <- function(P, proj_P, beta = 1/5, sigma = 10^(-2), S, L, mu, lambda){
@@ -384,35 +384,34 @@ subgrad.obj <- function(P, S, L, lambda)
 #   return(alpha)
 # }
 
-dag.cr <- function(X, mu = 0.03 , alpha = 1, s = 0.01, lambda = 0, gamma = 2, n.iter = 100, n.iter.proj = 100, 
-                   eps = 1e-4, P.init = NULL,  penalty = c("lasso", "MCP"), maj.rule = FALSE, perm.rep = 100, refine = FALSE, ref.alpha = 0.001, BH = TRUE)
+dag.cr <- function(X, mu = 0.03 , alpha = 1, s = 0.01, lambda = 0, gamma = 2, n.iter = 100, n.iter.proj = 100,
+                   eps = 1e-4, penalty = c("lasso", "MCP"), maj.rule = FALSE, perm.rep = 100, refine = FALSE, ref.alpha = 0.001, BH = TRUE)
 {
   p <- dim(X)[2]
   obs <-dim(X)[1]
   P_proj <- matrix(0, p, p)
 #  L <- diag(1, n)
-  if (is.null(P.init))
-  {
-  	P <- 1:p
-  }else{
-    	P <- P.init
-  }
+#  if (is.null(P.init))
+#  {
+ # 	P <- 1:p
+#  }else{
+ #   	P <- P.init
+#  }
   ## initial values for dual variables
-  x = y = matrix(1, nrow = p)  
+  x = y = matrix(1, nrow = p)
   Z = matrix(1, nrow = p, ncol = p)
-  
+  P = matrix(1 / p, p, p)
   S <- crossprod(scale(X, center = TRUE, scale = FALSE)) / obs ## Covariance matrix
   L = init = diag(1 / sqrt(diag(S)))   ## Initial value for CSCS
   iter = 1
   converged = FALSE
+  old.obj = 1e+8
   err = c()
-  while ( (converged == FALSE) && (iter <= n.iter) ) 
+  while ( (converged == FALSE) && (iter <= n.iter) )
   {
-    P_old = P
-    L_old = L
   ### Projection into doubly stochastic space
   ## Update P
-    P_0 = as(as.integer(P),"pMatrix") - s * gradient(S, P, L, mu)
+    P_0 = P - s * gradient(S, P, L, mu)
   ## Projection step
     proj = proj.ds(P_0, x, y, Z, n.iter = n.iter.proj, eps = eps)
     D_proj = proj$P
@@ -422,20 +421,20 @@ dag.cr <- function(X, mu = 0.03 , alpha = 1, s = 0.01, lambda = 0, gamma = 2, n.
     Z = proj$Z
     proj_err = proj$err
     P_proj = P_proj + alpha * (D_proj - P_proj) ## Update P
-    
     ## Project into permutation matrix space
-    P = perm.proj(P_proj, rep = perm.rep, S, L, mu, P_old, maj.rule = maj.rule)
-
+    ord = perm.proj(P_proj, rep = perm.rep, S, L, mu, P, maj.rule = maj.rule)
+    P = diag(p)[ord, ]
+    cat("order is \n")
+    print(ord)
   ### Update L
   if (penalty == "lasso")
   {
-    L = relaxchol(X = X, P = P, gamma = 0, lambda = lambda,penalty = "lasso", eps = eps)
+    L = relaxchol(X = X, P = ord, gamma = 0, lambda = lambda,penalty = "lasso", eps = eps)
   }else{
-    L = relaxchol(X = X, P = P, gamma = gamma, lambda = lambda, penalty = "MCP", eps = eps)
+    L = relaxchol(X = X, P = ord, gamma = gamma, lambda = lambda, penalty = "MCP", eps = eps)
   }
   ### Objective update
-  interm.obj = obj.function(P, S, L_old, mu, lambda = lambda, gamma = gamma, penalty = penalty)
-  old.obj = obj.function(P_old, S, L_old, mu, lambda = lambda, gamma = gamma, penalty = penalty)
+#  interm.obj = obj.function(P, S, L_old, mu, lambda = lambda, gamma = gamma, penalty = penalty)
   new.obj = obj.function(P, S, L, mu, lambda = lambda, gamma = gamma, penalty = penalty)
   err[iter] = abs(old.obj - new.obj)
   cat("iter error ", err[iter], "\n")
@@ -444,6 +443,10 @@ dag.cr <- function(X, mu = 0.03 , alpha = 1, s = 0.01, lambda = 0, gamma = 2, n.
     converged = TRUE
   }else{
     iter = iter + 1
+    P_old = P
+    L_old = L
+    old.obj = obj.function(P_old, S, L_old, mu, lambda = lambda, gamma = gamma, penalty = penalty)
+
   }
   }
   B.p = - L / matrix(diag(L), p,p,  byrow = TRUE)
@@ -452,12 +455,12 @@ dag.cr <- function(X, mu = 0.03 , alpha = 1, s = 0.01, lambda = 0, gamma = 2, n.
   {
     B = refine(X, P, L, ref.alpha, BH = BH)
   }else{
-    L.p = t(as(as.integer(c(P)),"pMatrix")) %*% L %*% as(as.integer(c(P)),"pMatrix")
+    L.p = t(P) %*% L %*% P
     B = - L.p / matrix(diag(L.p), p,p,  byrow = TRUE)
     diag(B) = 0
     rm(L.p)
   }
-  return = list(P = P, P_0 = D_proj, B = B, B.p = B.p, L = L, err = err, proj.err = proj_err)
+  return = list(P = P, P_0 = D_proj, B = B,ord = ord, B.p = B.p, L = L, err = err, proj.err = proj_err)
   return (return)
 }
 
@@ -530,9 +533,9 @@ refine <- function(X, P, L, alpha, BH = TRUE)
 #     P <- P.init
 #   }
 #   ## initial values for dual variables
-#   x = y = matrix(0, nrow = n)  
+#   x = y = matrix(0, nrow = n)
 #   Z = matrix(0, nrow = n, ncol = n)
-#   
+#
 #   S <- crossprod(scale(X, center = TRUE, scale = FALSE)) / obs ## Covariance matrix
 #   L = init = diag(1 / sqrt(diag(S)))   ## Initial value for CSCS
 #  # old.obj = obj.function(P, S, init, mu, lambda = lambda)
@@ -540,7 +543,7 @@ refine <- function(X, P, L, alpha, BH = TRUE)
 #   converged = FALSE
 #   iter = 0
 #   err = c()
-# #  while ( (iter <= n.iter) ) 
+# #  while ( (iter <= n.iter) )
 #   while((converged == FALSE) && (iter < n.iter))
 #    {
 #     P_old = P
@@ -558,13 +561,13 @@ refine <- function(X, P, L, alpha, BH = TRUE)
 #     Z = proj$Z
 #     proj_err = proj$err
 #     P = P + alpha * (P_proj - P) ## Update P
-#     
+#
 #     ### Update L
 # #    XP_t = tcrossprod(X, P)
 #     if (penalty == "lasso")
 #     {
 #       cv = relaxchol_CV(X = X , gamma = 0, P = P, lamlist = lamlist, nlam = nlam, flmin = flmin, folds = folds, nfolds = nfolds, maxiter = n.iter, penalty = c("lasso"), eps = eps)
-#       
+#
 #     }else{
 #       cv = relaxchol_CV(X = X , gamma = gamma, P = P, lamlist = lamlist, nlam = nlam, flmin = flmin, folds = folds, nfolds = nfolds, maxiter = n.iter, penalty = c("MCP"), eps = eps)
 #     }
