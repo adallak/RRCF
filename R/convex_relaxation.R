@@ -384,7 +384,7 @@ subgrad.obj <- function(P, S, L, lambda)
 #   return(alpha)
 # }
 
-dag.cr <- function(X, mu = 0.03 , alpha = 1, s = 0.01, lambda = 0, gamma = 2, n.iter = 100, n.iter.proj = 100,
+dagrrcf <- function(X, mu = 0.03 , alpha = 1, s = 0.01, lambda = 0, gamma = 2, n.iter = 100, n.iter.proj = 100,
                    eps = 1e-4, penalty = c("lasso", "MCP"), maj.rule = FALSE, perm.rep = 100, refine = FALSE, ref.alpha = 0.001, BH = TRUE)
 {
   p <- dim(X)[2]
