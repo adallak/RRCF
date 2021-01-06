@@ -99,7 +99,7 @@ relaxchol <- function(X, P, gamma, lambda, maxiter = 100, eps = 1e-4, initL = NU
 {
   n = dim(X)[1]
   p = dim(X)[2]
-  XP = X[,P]# tcrossprod(X, P)
+  XP = tcrossprod(X, P)
   colnames(XP) = colnames(X)
   S = crossprod(scale(XP, center = TRUE, scale = FALSE)) / n
   if (is.null(initL))

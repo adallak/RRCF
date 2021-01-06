@@ -6,8 +6,8 @@
 \usage{
 dagrrcf(X, mu = 0.03, alpha = 1, s = 0.01, lambda = 0, gamma = 2,
   n.iter = 100, n.iter.proj = 100, eps = 1e-04,
-  penalty = c("lasso", "MCP"), maj.rule = FALSE, perm.rep = 100,
-  refine = FALSE, ref.alpha = 0.001, BH = TRUE)
+  penalty = c("lasso", "MCP"), perm.rep = 100, refine = FALSE,
+  ref.alpha = 0.001, BH = TRUE)
 }
 \arguments{
 \item{X}{- n x p data matrix}
