@@ -15,3 +15,13 @@ To install the latest version from Github, use
 library(devtools)
 devtools::install_github("adallak/RRCF")
 ```
+Simple example
+
+```s
+require(RRCF)
+p = 10
+n = 150
+prob = 0.3
+X = genDAGdata(n, p, prob)
+est_P = dagrrcf(X, mu = 0.1 , alpha = 1, s = 2, lambda = 0.1, gamma = 2, n.iter = 100, penalty = c("MCP"), perm.rep = 100)$P
+```
